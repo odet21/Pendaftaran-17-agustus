@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pendaftaran Lomba 17 Agustus</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; max-width: 600px; margin: auto; }
+    label { display: block; margin-top: 15px; }
+    input, textarea, select { width: 100%; padding: 8px; margin-top: 5px; }
+    .checkbox-group { display: flex; flex-direction: column; }
+    .checkbox-group label { margin: 3px 0; font-weight: normal; }
+    button { margin-top: 20px; padding: 10px 15px; background: red; color: white; border: none; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h2>Formulir Pendaftaran Lomba 17 Agustus 2025</h2>
+  <form id="formLomba">
+    <label>Nama Lengkap:
+      <input type="text" name="nama" required>
+    </label>
+
+    <label>Usia:
+      <input type="number" name="usia" required>
+    </label>
+
+    <label>Jenis Kelamin:
+      <select name="gender" required>
+        <option value="">-- Pilih --</option>
+        <option value="Laki-laki">Laki-laki</option>
+        <option value="Perempuan">Perempuan</option>
+      </select>
+    </label>
+
+    <label>Alamat:
+      <textarea name="alamat" required></textarea>
+    </label>
+
+    <label>No. HP / WhatsApp:
+      <input type="text" name="telepon" required>
+    </label>
+
+    <label>Lomba yang Diikuti:</label>
+    <div class="checkbox-group">
+      <label><input type="checkbox" name="lomba" value="Balap Karung"> Balap Karung</label>
+      <label><input type="checkbox" name="lomba" value="Makan Kerupuk"> Makan Kerupuk</label>
+      <label><input type="checkbox" name="lomba" value="Tarik Tambang"> Tarik Tambang</label>
+      <label><input type="checkbox" name="lomba" value="Panjat Pinang"> Panjat Pinang</label>
+      <label><input type="checkbox" name="lomba" value="Lomba Estafet Keluarga"> Lomba Estafet Keluarga</label>
+    </div>
+
+    <label>Kategori Peserta:
+      <select name="kategori" required>
+        <option value="">-- Pilih Kategori --</option>
+        <option value="Anak-anak">Anak-anak (≤12 tahun)</option>
+        <option value="Remaja">Remaja (13–17 tahun)</option>
+        <option value="Dewasa">Dewasa (18+)</option>
+      </select>
+    </label>
+
+    <label>Komentar / Pesan (Opsional):
+      <textarea name="komentar"></textarea>
+    </label>
+
+    <button type="submit">Kirim Pendaftaran</button>
+  </form>
+
+  <script>
+    document.getElementById("formLomba").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const form = e.target;
+      const formData = new FormData(form);
+      const data = {};
+
+      // Ambil checkbox 'lomba' sebagai array
+      const lombaDipilih = [];
+      form.querySelectorAll('input[name="lomba"]:checked').forEach(el => {
+        lombaDipilih.push(el.value);
+      });
+
+      formData.forEach((val, key) => {
+        if (key !== 'lomba') data[key] = val;
+      });
+      data.lomba = lombaDipilih.join(", ");
+
+      fetch("https://script.google.com/macros/s/AKfycby-VbnfAoS03sZpu82HEKVuKSdmMDVKOE4ccEbyvNEpd4JV77Jp1H1d0GXZO5me3dae/exec", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify(data)
+})
+.then(() => {
+  alert("Pendaftaran berhasil!");
+  form.reset();
+})
+.catch(err => {
+  alert("Gagal mengirim data: " + err.message);
+});
+    });
+  </script>
+</body>
+</html>
